@@ -1,5 +1,41 @@
-template-repository (1.0-1) unstable; urgency=medium
+lxqt-build-tools-qt5 (0.13.0-3) unstable; urgency=medium
 
-  * Initial release
+  * debian/control: correctly conflicts on lxqt-build-tools (<= 2.0.0).
+  * debian/gbp.conf: let debhelper to handle compress format.
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Andrew Lee (李健秋) <ajqlee@debian.org>  Mon, 10 Mar 2025 09:06:23 +0100
+
+lxqt-build-tools-qt5 (0.13.0-2) unstable; urgency=medium
+
+  * debian/control: declar conflicts on lxqt-build-tools (< 2.1.0).
+    (Closes: #1087058)
+
+ -- Andrew Lee (李健秋) <ajqlee@debian.org>  Tue, 04 Feb 2025 10:12:46 +0100
+
+lxqt-build-tools-qt5 (0.13.0-1) unstable; urgency=medium
+
+  * Run wrap-and-sort.
+  * debian/control: drop duplicated Standards-Version line.
+  * debian/control: bump to Standards-version to 4.7.0, no changes needed.
+  * debian/copyright: update.
+
+ -- Andrew Lee (李健秋) <ajqlee@debian.org>  Mon, 03 Feb 2025 11:40:41 +0100
+
+lxqt-build-tools-qt5 (0.13.0-1~exp2) experimental; urgency=medium
+
+  * This is an older version of lxqt-build-tools without additional code
+    changes which are needed to support LXQt components which not yet
+    fully ported to QT6.
+    Here is the LXQt upstream document that explains why we need
+    that for QT5 support in the latest release:
+      https://github.com/lxqt/lxqt/wiki/Building-from-source#qt5-support
+
+ -- Andrew Lee (李健秋) <ajqlee@debian.org>  Thu, 07 Nov 2024 18:51:15 +0100
+
+lxqt-build-tools-qt5 (0.13.0-1~exp1) experimental; urgency=medium
+
+  * Renamed from lxqt-build-tools.
+  * Needed for styling QT5-based applications and allowing them to use
+    LXQt file dialog. (Closes:#1084510)
+
+ -- Andrew Lee (李健秋) <ajqlee@debian.org>  Tue, 08 Oct 2024 11:44:30 +0200

@@ -1,0 +1,70 @@
+#!/bin/bash
+#=============================================================================
+# Copyright 2015-2017 Alf Gaida <agaida@siduction.org>
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#=============================================================================
+
+# Usage: git versions
+# one should have a valid versions list in the source dir
+
+[ ! -d "auto" ] && mkdir auto
+echo "Current Repository Versions"
+echo "==========================="
+
+if [ ! -f ./.git-versions.list ]; then
+    echo "Please create a valid ./.git-verisions.list"
+    echo "One can find the LXQt template  in /usr/share/lxqt-build-tools"
+else
+    source ./.git-versions.list
+fi
+
+for i in $repositories; do
+    if [[ "$i" =~ "==" ]]; then
+        echo ""
+        echo "$i"
+    else
+        pushd $i >/dev/null
+        if [ ! -d upstream ]; then
+            echo "$i: please clone  upstream"
+        else
+            pushd upstream &>/dev/null
+            # cleanup possible debris and make sure we are on master
+            git reset --hard &>/dev/null
+            # git clean -ffdx &>/dev/null
+            git remote prune origin &>/dev/null
+            git checkout master &>/dev/null
+            ## end cleanup
+            oldversion=$(git describe --tags --dirty 2>/dev/null)
+            [[ -z "$oldversion" ]] && oldversion=$(git describe --tags --dirty)
+            git pull --all --tags >/dev/null 2>/dev/null
+            version=$(git describe --tags --dirty 2>/dev/null)
+            [[ -z "$version" ]] && version=$(git describe --tags --dirty)
+            unset new && [ "$oldversion" != "$version" ] && new="NEW!!"
+            echo "$i: $version $new"
+            popd &>/dev/null
+        fi
+        popd &>/dev/null
+    fi
+done
